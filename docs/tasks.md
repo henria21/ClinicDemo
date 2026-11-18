@@ -39,7 +39,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
 - **Notes:** the approved file is written once, then **reviewed by Henri** for Hebrew wording before T2 is ticked.
 
 ### T3 — HebrewTextNormalizer + HebrewPrefixMatcher
-- [ ] **Goal:** Deterministic tokenisation that keeps `16:00` intact and matches keywords behind one or two Hebrew prefixes.
+- [x] **Goal:** Deterministic tokenisation that keeps `16:00` intact and matches keywords behind one or two Hebrew prefixes.
 - **Files:** `Services/HebrewTextNormalizer.cs`, `Services/HebrewPrefixMatcher.cs`
 - **Depends on:** T1
 - **Done when:** `HebrewTextNormalizerTests` and `HebrewPrefixMatcherTests` from design §9 pass:
