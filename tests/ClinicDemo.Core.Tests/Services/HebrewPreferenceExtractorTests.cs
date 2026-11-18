@@ -183,6 +183,23 @@ public class HebrewPreferenceExtractorTests
         Assert.Equal(expected, _extractor.Extract(text).WeekHint);
     }
 
+    [Theory]
+    [InlineData("השבוע או בשבוע הבא", true)]
+    [InlineData("בשבוע הבא או השבוע, יום חמישי", true)]
+    [InlineData("בשבוע הבא", false)]
+    [InlineData("השבוע", false)]
+    [InlineData("יום חמישי", false)]
+    public void BothWeeksInOneMessage_SetsWeekHintConflict(string text, bool expected)
+    {
+        var r = _extractor.Extract(text);
+
+        Assert.Equal(expected, r.WeekHintConflict);
+        if (expected)
+        {
+            Assert.Equal(WeekHint.None, r.WeekHint);
+        }
+    }
+
     [Fact]
     public void NextWeekThursday_GivesBothDayAndHint()
     {

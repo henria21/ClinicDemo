@@ -17,7 +17,7 @@ namespace ClinicDemo.Core.Services;
 /// <item>Relative days: היום → Today, מחר → Tomorrow, מחרתיים → DayAfterTomorrow.</item>
 /// <item>Week hints: "שבוע" followed by "הבא" → NextWeek ("שבוע הבא", "בשבוע הבא", "השבוע הבא");
 /// "שבוע" followed by "הזה", or "השבוע" → ThisWeek. A bare "בשבוע" gives no hint. If one message names both weeks,
-/// the hint is <see cref="WeekHint.None"/>: the extractor never picks one.</item>
+/// the hint is <see cref="WeekHint.None"/> and <see cref="ExtractionResult.WeekHintConflict"/> is set: the extractor never picks one.</item>
 /// <item>Day parts: בוקר → Morning; צהריים / צהרים → Midday; "אחר הצהריים" / "אחרי הצהריים" / אחה״צ → Afternoon.</item>
 /// <item>Times, 24-hour only, after "אחרי" or "לאחר": HH:MM (00–23, 00–59) or a bare hour 13–23 → After(time).
 /// A bare 0–12, a number word or anything else (including nothing) after the marker sets
@@ -226,7 +226,8 @@ public sealed class HebrewPreferenceExtractor
             _ => WeekHint.None,
         };
 
-        return new ExtractionResult(categories, days, windows, weekHint, ambiguousTime, unknownDayName);
+        return new ExtractionResult(
+            categories, days, windows, weekHint, ambiguousTime, unknownDayName, WeekHintConflict: thisWeek && nextWeek);
     }
 
     /// <summary>Adds <paramref name="value"/> unless it was seen before, keeping first-seen order. O(1).</summary>

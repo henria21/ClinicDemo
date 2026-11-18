@@ -66,7 +66,7 @@ The design below assumes Blazor WASM. If you prefer React, the Core design carri
 | `RequestStatus` | enum | `AwaitingReview`, `Reviewed`, `NeedsClarification`. **No booked/confirmed value exists.** |
 | `ConversationStage` | enum | `Collecting`, `Reviewing`, `Editing` (form open, for Edit or fallback), `Submitted`, `Halted` (after a medical handoff; only an explicit restart leaves it) |
 | `VisitorIntent` | enum | `Preference`, `Medical`, `AsksIfBooked`, `DemandsConfirmation` |
-| `ExtractionResult` | record | Candidate sets: `Categories`, `Days`, `Windows`, `WeekHint` (`None` / `ThisWeek` / `NextWeek`), and `UnknownDayName` for day-like words that weren't recognised |
+| `ExtractionResult` | record | Candidate sets: `Categories`, `Days`, `Windows`, `WeekHint` (`None` / `ThisWeek` / `NextWeek`), `WeekHintConflict` (the message names both weeks, e.g. "השבוע או בשבוע הבא"; `WeekHint` is then `None`), and `UnknownDayName` for day-like words that weren't recognised |
 | `TemplateId` | enum | One value per assistant message (see MessageCatalog) |
 | `AssistantMessage` | record `(TemplateId Id, string Text)` | What the chat shows |
 | `DemoOptions` | record `(DateOnly SimulationDate)` | Default 2026-11-18 (Wednesday) |
@@ -146,7 +146,7 @@ These are enforced in `ConversationEngine` and tested directly:
    - **Week hint.** If the message has one, set `draft.WeekHint`. It **persists** across later messages and edits until a newer hint replaces it.
    - **Conflicts**, checked per field. Each conflicting field is set to null (I-3):
      - two or more categories → `ClarifyCategory(options)`
-     - two or more days → `ClarifyDay(options)`
+     - two or more days, **or both weeks named in one message (`WeekHintConflict`)** → `ClarifyDay(options)`. A week-hint conflict leaves the stored `draft.WeekHint` unchanged and nulls the day.
      - incompatible windows → `ClarifyWindow(options)`. This is a **parsing rule, not clinic hours**: `Morning` means before 12:00 and `Midday`/`Afternoon` mean 12:00 or later, so `Morning` + `After ≥ 12:00` and `Midday`/`Afternoon` + `After < 12:00` conflict.
    - **Ambiguous time** (`אחרי 4`) → window set to null → `AskTime24h`.
    - **Single values** overwrite the draft field (FR-9: "בעצם עדיף רביעי").
