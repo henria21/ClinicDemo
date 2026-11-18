@@ -50,7 +50,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - unknown words never match
 
 ### T4 — HebrewPreferenceExtractor
-- [ ] **Goal:** Tokens → `ExtractionResult` candidate sets for category, day reference, week hint and window, with **24-hour-only** times.
+- [x] **Goal:** Tokens → `ExtractionResult` candidate sets for category, day reference, week hint and window, with **24-hour-only** times.
 - **Files:** `Services/HebrewPreferenceExtractor.cs`
 - **Depends on:** T3
 - **Done when:** `HebrewPreferenceExtractorTests` pass:
