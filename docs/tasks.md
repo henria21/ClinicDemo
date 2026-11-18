@@ -28,7 +28,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
 - **Notes:** target `net8.0`. Models are trivial type definitions, which is why they share the skeleton task rather than getting their own.
 
 ### T2 — HebrewFormatter + MessageCatalog (approved text)
-- [ ] **Goal:** All visitor-facing assistant text comes from one catalog. Formatted values (category labels, time phrases, card dates) come from one formatter.
+- [x] **Goal:** All visitor-facing assistant text comes from one catalog. Formatted values (category labels, time phrases, card dates) come from one formatter.
 - **Files:** `Services/HebrewFormatter.cs`, `Services/MessageCatalog.cs`, `tests/…/Approved/MessageCatalog.approved.txt`
 - **Depends on:** T1
 - **Done when:**
