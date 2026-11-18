@@ -21,6 +21,15 @@ public sealed class HebrewFormatter
         _ => throw new ArgumentOutOfRangeException(nameof(category), category, "Unknown category."),
     };
 
+    /// <summary>Card status (FR-15 / FR-16): "ממתין לבדיקת צוות" / "נבדק" / "דורש הבהרה". None of them is a booking.</summary>
+    public string StatusLabel(RequestStatus status) => status switch
+    {
+        RequestStatus.AwaitingReview => "ממתין לבדיקת צוות",
+        RequestStatus.Reviewed => "נבדק",
+        RequestStatus.NeedsClarification => "דורש הבהרה",
+        _ => throw new ArgumentOutOfRangeException(nameof(status), status, "Unknown status."),
+    };
+
     /// <summary>Full weekday name: "שלישי".</summary>
     public string WeekdayName(DayOfWeek day) => day switch
     {

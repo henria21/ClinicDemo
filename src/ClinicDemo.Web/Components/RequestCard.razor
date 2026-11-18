@@ -1,0 +1,37 @@
+@* FR-15 / FR-16: one submitted request. The only actions are the two staff statuses;
+   there is no book or confirm control (AC-7). A status change sends nothing to the chat (FR-17). *@
+@inject DemoAppState State
+@inject HebrewFormatter Formatter
+
+<article class="request-card" data-request="@Request.Id">
+    <dl class="card-fields">
+        <dt>מזהה</dt>
+        <dd class="card-id" dir="ltr">@Request.Id</dd>
+        <dt>איש קשר</dt>
+        <dd class="card-contact" dir="ltr">@Request.ContactId</dd>
+        <dt>סוג תור</dt>
+        <dd class="card-category">@Formatter.CategoryLabel(Request.Category)</dd>
+        <dt>העדפת זמן</dt>
+        <dd class="card-time">@Formatter.CardTimePreference(Request.TimePreference)</dd>
+        <dt>סטטוס</dt>
+        <dd class="card-status">@Formatter.StatusLabel(Request.Status)</dd>
+    </dl>
+    <div class="card-wording">
+        <p class="card-wording-title">הנוסח המקורי</p>
+        @foreach (var line in Request.OriginalWording)
+        {
+            <p class="card-wording-line" dir="auto">@line</p>
+        }
+    </div>
+    <div class="card-actions">
+        <button type="button" class="status-reviewed" disabled="@(Request.Status == RequestStatus.Reviewed)"
+                @onclick="() => State.SetStatus(Request.Id, RequestStatus.Reviewed)">נבדק</button>
+        <button type="button" class="status-clarify" disabled="@(Request.Status == RequestStatus.NeedsClarification)"
+                @onclick="() => State.SetStatus(Request.Id, RequestStatus.NeedsClarification)">דורש הבהרה</button>
+    </div>
+</article>
+
+@code {
+    [Parameter, EditorRequired]
+    public AppointmentRequest Request { get; set; } = default!;
+}

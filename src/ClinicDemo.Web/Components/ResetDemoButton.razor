@@ -1,0 +1,5 @@
+@* FR-18: clears every card, the ID sequence and the chat, and returns to contact selection.
+   All state is in memory, so a browser refresh resets too. *@
+@inject DemoAppState State
+
+<button type="button" class="reset-button" @onclick="State.Reset">איפוס הדמו</button>

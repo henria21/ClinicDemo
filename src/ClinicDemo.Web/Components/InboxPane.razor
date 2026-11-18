@@ -1,0 +1,31 @@
+@* The receptionist inbox. Re-renders on DemoAppState.Changed, so a submitted card appears without a reload (FR-15). *@
+@implements IDisposable
+@inject DemoAppState State
+
+<section class="inbox-pane" aria-label="תיבת בקשות">
+    <header class="inbox-header">
+        <h2 class="inbox-title">בקשות לבדיקת צוות</h2>
+    </header>
+
+    @if (State.Requests.Count == 0)
+    {
+        <p class="inbox-empty">אין בקשות עדיין.</p>
+    }
+    else
+    {
+        <div class="inbox-cards">
+            @foreach (var request in State.Requests)
+            {
+                <RequestCard @key="request.Id" Request="request" />
+            }
+        </div>
+    }
+</section>
+
+@code {
+    protected override void OnInitialized() => State.Changed += OnStateChanged;
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => State.Changed -= OnStateChanged;
+}

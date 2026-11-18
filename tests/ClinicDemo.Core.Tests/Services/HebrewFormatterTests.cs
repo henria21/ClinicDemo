@@ -118,4 +118,13 @@ public class HebrewFormatterTests
         Assert.Equal("א, ב או ג", _formatter.OrList(new[] { "א", "ב", "ג" }));
         Assert.Throws<ArgumentException>(() => _formatter.OrList(Array.Empty<string>()));
     }
+
+    [Theory]
+    [InlineData(RequestStatus.AwaitingReview, "ממתין לבדיקת צוות")]
+    [InlineData(RequestStatus.Reviewed, "נבדק")]
+    [InlineData(RequestStatus.NeedsClarification, "דורש הבהרה")]
+    public void StatusLabel_MatchesTheRequirements(RequestStatus status, string expected)
+    {
+        Assert.Equal(expected, new HebrewFormatter().StatusLabel(status));
+    }
 }

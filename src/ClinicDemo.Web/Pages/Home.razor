@@ -2,7 +2,13 @@
 
 <PageTitle>דמו בקשת תור</PageTitle>
 
-@* T13 adds the inbox pane and the two-pane layout. *@
-<main dir="rtl" lang="he">
-    <ChatPane />
-</main>
+<div class="app" dir="rtl" lang="he">
+    <div class="app-bar">
+        <span class="app-bar-title">דמו בקשת תור: מרפאה בדויה, ללא קביעת תורים</span>
+        <ResetDemoButton />
+    </div>
+    <main class="panes">
+        <ChatPane />
+        <InboxPane />
+    </main>
+</div>

@@ -155,7 +155,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - Saving the form → a new summary.
 
 ### T13 — Inbox pane, Reset, two-pane layout
-- [ ] **Goal:** `InboxPane` + `RequestCard` (ID, contact, category, time, status, original wording beside the fields, נבדק / דורש הבהרה buttons), `ResetDemoButton`, and `Home.razor` two-pane layout that stacks below 768 px.
+- [x] **Goal:** `InboxPane` + `RequestCard` (ID, contact, category, time, status, original wording beside the fields, נבדק / דורש הבהרה buttons), `ResetDemoButton`, and `Home.razor` two-pane layout that stacks below 768 px.
 - **Files:** `Components/InboxPane.razor`, `Components/RequestCard.razor`, `Components/ResetDemoButton.razor`, `Pages/Home.razor` + `wwwroot/css/app.css`
 - **Depends on:** T12
 - **Done when:** bUnit tests pass:
