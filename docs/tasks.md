@@ -83,7 +83,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
 - **Notes:** a comment at the top of the class states this is demonstration, not reliable detection.
 
 ### T7 — RequestValidator + RequestStore
-- [ ] **Goal:** Validated, idempotent, thread-safe in-memory store with `Submit`, `SetStatus`, `GetAll`, `Clear` and a `Changed` event.
+- [x] **Goal:** Validated, idempotent, thread-safe in-memory store with `Submit`, `SetStatus`, `GetAll`, `Clear` and a `Changed` event.
 - **Files:** `Services/RequestValidator.cs`, `Repositories/RequestStore.cs`, `Exceptions/InvalidRequestException.cs`, `Exceptions/InvalidStatusChangeException.cs`
 - **Depends on:** T1, T5 (range check)
 - **Done when:** `RequestValidatorTests` and `RequestStoreTests` pass:
