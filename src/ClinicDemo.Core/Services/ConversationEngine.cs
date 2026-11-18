@@ -1,4 +1,5 @@
 using ClinicDemo.Core.Models;
+using ClinicDemo.Core.Repositories;
 using ClinicDemo.Core.Session;
 
 namespace ClinicDemo.Core.Services;
@@ -21,6 +22,7 @@ public sealed class ConversationEngine
     private readonly HebrewDateResolver _resolver;
     private readonly RequestValidator _validator;
     private readonly MessageCatalog _catalog;
+    private readonly RequestStore _store;
     private readonly DemoOptions _options;
 
     public ConversationEngine(
@@ -29,6 +31,7 @@ public sealed class ConversationEngine
         HebrewDateResolver resolver,
         RequestValidator validator,
         MessageCatalog catalog,
+        RequestStore store,
         DemoOptions options)
     {
         _intents = intents ?? throw new ArgumentNullException(nameof(intents));
@@ -36,6 +39,7 @@ public sealed class ConversationEngine
         _resolver = resolver ?? throw new ArgumentNullException(nameof(resolver));
         _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
+        _store = store ?? throw new ArgumentNullException(nameof(store));
         _options = options ?? throw new ArgumentNullException(nameof(options));
     }
 
@@ -47,6 +51,104 @@ public sealed class ConversationEngine
 
         var replies = HandleCore(session, text);
         return Emit(session, replies);
+    }
+
+    /// <summary>
+    /// Submits a review (I-1), deciding in this order:
+    /// <list type="number">
+    /// <item>The store already holds a request for this ReviewId → <see cref="SubmitOutcome.Duplicate"/> with that card. Nothing else changes.</item>
+    /// <item>The stage is Reviewing and the ReviewId is the active one → <see cref="SubmitOutcome.Created"/>, stage Submitted, Submitted message.</item>
+    /// <item>Otherwise → <see cref="SubmitOutcome.Rejected"/>: a pure no-op. No card, no message, and stage, draft and active review are untouched.</item>
+    /// </list>
+    /// </summary>
+    public SubmitResult Submit(ConversationSession session, Guid reviewId)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+
+        if (_store.FindByReviewId(reviewId) is { } existing)
+        {
+            return new SubmitResult(SubmitOutcome.Duplicate, existing);
+        }
+
+        if (session.Stage != ConversationStage.Reviewing || session.ActiveReview is not { } review || review.ReviewId != reviewId)
+        {
+            return new SubmitResult(SubmitOutcome.Rejected, null);
+        }
+
+        var result = _store.Submit(review);
+        session.MarkSubmitted(reviewId);
+        session.InvalidateReview(); // the submitted review can't be edited or submitted again from the chat
+        session.Stage = ConversationStage.Submitted;
+        Emit(session, One(TemplateId.Submitted));
+        return result;
+    }
+
+    /// <summary>Opens the Edit form: invalidates the active review (I-2) and moves to Editing.</summary>
+    public void OpenEdit(ConversationSession session)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        if (session.Stage is ConversationStage.Halted or ConversationStage.Submitted)
+        {
+            throw new InvalidOperationException($"Edit is not available in stage {session.Stage}.");
+        }
+
+        session.InvalidateReview();
+        session.Stage = ConversationStage.Editing;
+    }
+
+    /// <summary>
+    /// Applies the Edit / fallback form (FR-14). Invalid values change nothing and the form stays open.
+    /// Valid values replace the draft fields and give a fresh summary with a new ReviewId.
+    /// </summary>
+    public ValidationResult ApplyForm(ConversationSession session, Category category, DayOfWeek weekday, WeekHint week, TimeWindow window)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        ArgumentNullException.ThrowIfNull(window);
+        RequireEditing(session);
+
+        var day = DayReference.Of(weekday);
+        if (!Enum.IsDefined(week) || !Enum.IsDefined(weekday))
+        {
+            return ValidationResult.Fail("The day or week is not a valid value.");
+        }
+
+        if (_resolver.Resolve(day, week, _options.SimulationDate) is not DateResolution.Resolved resolved)
+        {
+            return ValidationResult.Fail("The day is outside the selectable range.");
+        }
+
+        var validation = _validator.Validate(category, new TimePreference(resolved.Date, window));
+        if (!validation.IsValid)
+        {
+            return validation;
+        }
+
+        var draft = session.Draft;
+        draft.Category = category;
+        draft.DayReference = day;
+        draft.WeekHint = week;
+        draft.Window = window;
+        session.ResetMisses();
+        Emit(session, NextStep(session));
+        return ValidationResult.Ok;
+    }
+
+    /// <summary>Closes the form without changes: a fresh summary of the unchanged draft (new ReviewId, I-4), or the next question if a field is missing.</summary>
+    public IReadOnlyList<AssistantMessage> CancelEdit(ConversationSession session)
+    {
+        ArgumentNullException.ThrowIfNull(session);
+        RequireEditing(session);
+
+        session.Stage = ConversationStage.Collecting;
+        return Emit(session, NextStep(session));
+    }
+
+    private static void RequireEditing(ConversationSession session)
+    {
+        if (session.Stage != ConversationStage.Editing)
+        {
+            throw new InvalidOperationException($"The form is not open (stage {session.Stage}).");
+        }
     }
 
     private List<AssistantMessage> HandleCore(ConversationSession session, string text)

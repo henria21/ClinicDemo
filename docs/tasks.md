@@ -109,7 +109,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - **AC-9 (chat side):** two unparseable answers → OfferForm, stage `Editing`.
 
 ### T9 — ConversationEngine: review invariants, submit, edit, handoff
-- [ ] **Goal:** Implement invariants I-1 to I-5 from design §5: invalidation on every change, the three submit outcomes, Edit/Apply/Cancel, medical halt + restart, and the booking-question replies.
+- [x] **Goal:** Implement invariants I-1 to I-5 from design §5: invalidation on every change, the three submit outcomes, Edit/Apply/Cancel, medical halt + restart, and the booking-question replies.
 - **Files:** `Services/ConversationEngine.cs` (extended), `Session/ConversationSession.cs` (`InvalidateReview`)
 - **Depends on:** T7, T8
 - **Done when:** `ReviewInvariantTests`, `SubmitOutcomeTests`, `MedicalHandoffTests`, the rest of `WeekContextTests` and the AC-7a check all pass:

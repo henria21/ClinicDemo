@@ -47,6 +47,50 @@ public class WeekContextTests
         Assert.Equal(new DateOnly(2026, 11, 19), _session.ActiveReview!.TimePreference.Day);
     }
 
+    // ---- During review (T9, AC-3) ----
+
+    [Fact]
+    public void ChangingTheDayDuringANextWeekReview_KeepsTheHint()
+    {
+        _engine.Handle(_session, "שלום, אפשר לקבוע תור לבדיקה בשבוע הבא, אחר הצהריים?");
+        _engine.Handle(_session, "יום שלישי אחרי 16:00.");
+        var firstId = _session.ActiveReview!.ReviewId;
+
+        var replies = _engine.Handle(_session, "בעצם חמישי");
+
+        Assert.Equal(TemplateId.Summary, replies.Last().Id);
+        Assert.Equal(new DateOnly(2026, 11, 26), _session.ActiveReview!.TimePreference.Day);
+        Assert.NotEqual(firstId, _session.ActiveReview.ReviewId);
+        Assert.Contains("ביום חמישי בשבוע הבא אחרי 16:00", replies.Last().Text);
+    }
+
+    [Fact]
+    public void ChangingOnlyTheWeek_ReResolvesTheSameWeekday()
+    {
+        _engine.Handle(_session, "שלום, אפשר לקבוע תור לבדיקה בשבוע הבא, אחר הצהריים?");
+        _engine.Handle(_session, "יום שלישי אחרי 16:00.");
+        _engine.Handle(_session, "בעצם חמישי");
+        var thursdayId = _session.ActiveReview!.ReviewId;
+
+        var replies = _engine.Handle(_session, "בעצם בשבוע הזה");
+
+        Assert.Equal(TemplateId.Summary, replies.Last().Id);
+        Assert.Equal(new DateOnly(2026, 11, 19), _session.ActiveReview!.TimePreference.Day);
+        Assert.NotEqual(thursdayId, _session.ActiveReview.ReviewId);
+    }
+
+    [Fact]
+    public void EditFormOnANextWeekDraft_KeepsTheHintForTheSelector()
+    {
+        _engine.Handle(_session, "בדיקה בשבוע הבא אחר הצהריים");
+        _engine.Handle(_session, "חמישי");
+
+        _engine.OpenEdit(_session);
+
+        Assert.Equal(WeekHint.NextWeek, _session.Draft.WeekHint);
+        Assert.Equal(DayReference.Of(DayOfWeek.Thursday), _session.Draft.DayReference);
+    }
+
     [Fact]
     public void BothWeeksInOneMessage_AsksClarifyDay()
     {

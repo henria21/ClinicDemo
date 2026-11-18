@@ -166,7 +166,9 @@ These are enforced in `ConversationEngine` and tested directly:
 - `ApplyForm` validates, then gives a fresh summary.
 - `CancelEdit` gives a fresh summary of the unchanged draft (new ReviewId, I-4).
 
-**Submit(reviewId)** follows I-1. On `Created` → stage `Submitted` → `Submitted` template.
+**Submit(reviewId)** follows I-1. On `Created` → stage `Submitted` → `Submitted` template, and `ActiveReview` is cleared so no button can submit it again. Step 1 uses `RequestStore.FindByReviewId`, so checking "already submitted?" never creates a card. The engine receives the `RequestStore` through its constructor.
+
+**Engine API (T9).** `Handle(session, text)`, `Submit(session, reviewId) → SubmitResult`, `OpenEdit(session)`, `ApplyForm(session, category, weekday, week, window) → ValidationResult`, `CancelEdit(session)`. Invalid form values change nothing and the form stays open. `OpenEdit` after Submitted or Halted, and form actions outside `Editing`, throw `InvalidOperationException` (the UI never offers them). The form sets no wording: the card's original wording stays the chat messages.
 
 ### MessageCatalog, v1
 
