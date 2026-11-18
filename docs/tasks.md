@@ -72,7 +72,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - מחר + NextWeek → Conflict
 
 ### T6 — VisitorIntentDetector
-- [ ] **Goal:** Classify Medical, then AsksIfBooked / DemandsConfirmation, then Preference, in that priority, from small documented keyword lists.
+- [x] **Goal:** Classify Medical, then AsksIfBooked / DemandsConfirmation, then Preference, in that priority, from small documented keyword lists.
 - **Files:** `Services/VisitorIntentDetector.cs`, `tests/…/TestData/MedicalExamples.cs`
 - **Depends on:** T3
 - **Done when:**
