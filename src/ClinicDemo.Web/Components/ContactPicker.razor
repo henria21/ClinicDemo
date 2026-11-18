@@ -1,0 +1,14 @@
+@* FR-4: fixed fictional contacts only; there are no name, phone or email fields. *@
+@inject DemoAppState State
+
+<div class="contact-picker">
+    <p class="contact-picker-title">בחירת איש קשר לדוגמה:</p>
+    <div class="contact-picker-options">
+        @foreach (var contact in State.Contacts)
+        {
+            <button type="button" class="contact-option" data-contact="@contact.Id" @onclick="() => State.SelectContact(contact.Id)">
+                @contact.DisplayName
+            </button>
+        }
+    </div>
+</div>

@@ -1,0 +1,5 @@
+@* FR-3: the fixed simulation date every relative expression resolves against. *@
+@inject DemoOptions Options
+@inject HebrewFormatter Formatter
+
+<div class="simulation-date">תאריך סימולציה: יום @Formatter.WeekdayLetter(Options.SimulationDate.DayOfWeek), @Formatter.ShortDate(Options.SimulationDate)</div>

@@ -1,0 +1,10 @@
+@* Chat text is rendered as text (Razor encodes it), never as markup. *@
+<div class="bubble @(Entry.FromVisitor ? "bubble-visitor" : "bubble-assistant")" data-template="@Entry.Template">
+    <span class="bubble-author">@(Entry.FromVisitor ? "מבקר לדוגמה" : "העוזר")</span>
+    <p class="bubble-text">@Entry.Text</p>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public ChatEntry Entry { get; set; } = default!;
+}

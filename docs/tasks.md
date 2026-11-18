@@ -134,7 +134,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - A DI smoke test resolves `DemoAppState` from the Web service collection.
 
 ### T11 — Chat pane UI
-- [ ] **Goal:** The RTL chat: demo banner, simulation-date badge, contact picker, message list, text input, and the "שיחה חדשה" button when halted.
+- [x] **Goal:** The RTL chat: demo banner, simulation-date badge, contact picker, message list, text input, and the "שיחה חדשה" button when halted.
 - **Files:** `Components/DemoBanner.razor`, `Components/SimulationDateBadge.razor`, `Components/ContactPicker.razor`, `Components/ChatPane.razor` (with `MessageBubble.razor`)
 - **Depends on:** T10
 - **Done when:** bUnit tests pass:

@@ -1,0 +1,64 @@
+@implements IDisposable
+@inject DemoAppState State
+
+<section class="chat-pane" aria-label="צ׳אט">
+    <header class="chat-header">
+        <h1 class="chat-title">מרפאת דמו</h1>
+        <SimulationDateBadge />
+    </header>
+    <DemoBanner />
+
+    @if (State.Session is null)
+    {
+        <ContactPicker />
+    }
+    else
+    {
+        <p class="chat-contact">איש קשר: @State.Session.Contact.DisplayName</p>
+    }
+
+    <div class="chat-messages" aria-live="polite">
+        @foreach (var entry in State.Transcript)
+        {
+            <MessageBubble Entry="entry" />
+        }
+    </div>
+
+    @if (State.Session?.Stage == ConversationStage.Halted)
+    {
+        <button type="button" class="restart-button" @onclick="State.RestartConversation">שיחה חדשה</button>
+    }
+    else
+    {
+        <form class="chat-input" @onsubmit="SendAsync" @onsubmit:preventDefault>
+            <input class="chat-text" type="text" dir="auto" autocomplete="off" aria-label="הודעה"
+                   placeholder="כתיבת הודעה" disabled="@InputDisabled" @bind="_draft" @bind:event="oninput" />
+            <button type="submit" class="send-button" disabled="@InputDisabled">שליחה</button>
+        </form>
+    }
+</section>
+
+@code {
+    private string _draft = string.Empty;
+
+    private bool InputDisabled => State.Session is null;
+
+    protected override void OnInitialized() => State.Changed += OnStateChanged;
+
+    private Task SendAsync()
+    {
+        var text = _draft.Trim();
+        if (State.Session is null || text.Length == 0)
+        {
+            return Task.CompletedTask;
+        }
+
+        _draft = string.Empty;
+        State.Send(text);
+        return Task.CompletedTask;
+    }
+
+    private void OnStateChanged() => InvokeAsync(StateHasChanged);
+
+    public void Dispose() => State.Changed -= OnStateChanged;
+}
