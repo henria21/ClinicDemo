@@ -10,7 +10,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
 ---
 
 ### T1 — Walking skeleton + models
-- [ ] **Goal:** A solution with Core, Web (Blazor WASM standalone), Core.Tests (xUnit) and Web.Tests (bUnit) that builds, and `dotnet test` runs green. All model types from design §4 exist as records/enums.
+- [x] **Goal:** A solution with Core, Web (Blazor WASM standalone), Core.Tests (xUnit) and Web.Tests (bUnit) that builds, and `dotnet test` runs green. All model types from design §4 exist as records/enums.
 - **Files:**
   - `ClinicDemo.sln`, the four `.csproj` files
   - `Core/Models/*.cs` (records/enums only, no logic)
