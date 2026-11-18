@@ -61,7 +61,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - Multiple categories, days or windows produce sets with more than one entry.
 
 ### T5 — HebrewDateResolver
-- [ ] **Goal:** `(DayReference, WeekHint, simDate)` → `Resolved` / `OutOfRange` / `Conflict`, with Sunday–Saturday weeks and the range 18.11–28.11.
+- [x] **Goal:** `(DayReference, WeekHint, simDate)` → `Resolved` / `OutOfRange` / `Conflict`, with Sunday–Saturday weeks and the range 18.11–28.11.
 - **Files:** `Services/HebrewDateResolver.cs`
 - **Depends on:** T1
 - **Done when:** `HebrewDateResolverTests` pass, including:
