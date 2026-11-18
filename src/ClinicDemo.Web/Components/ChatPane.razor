@@ -20,9 +20,21 @@
     <div class="chat-messages" aria-live="polite">
         @foreach (var entry in State.Transcript)
         {
-            <MessageBubble Entry="entry" />
+            if (entry.Template == TemplateId.Summary)
+            {
+                <ReviewSummary @key="entry.ReviewId" Entry="entry" />
+            }
+            else
+            {
+                <MessageBubble Entry="entry" />
+            }
         }
     </div>
+
+    @if (State.Session?.Stage == ConversationStage.Editing)
+    {
+        <PreferenceForm />
+    }
 
     @if (State.Session?.Stage == ConversationStage.Halted)
     {

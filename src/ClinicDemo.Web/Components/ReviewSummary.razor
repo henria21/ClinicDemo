@@ -1,0 +1,47 @@
+@* The summary bubble. Only the bubble for the active review gets Edit / Submit (I-5);
+   earlier summaries render as plain text, so no stale button exists. *@
+@inject DemoAppState State
+
+<div class="bubble bubble-assistant bubble-summary" data-template="@Entry.Template">
+    <span class="bubble-author">העוזר</span>
+    <p class="bubble-text">@Entry.Text</p>
+    @if (IsActive)
+    {
+        <div class="summary-actions">
+            <button type="button" class="edit-button" disabled="@_submitting" @onclick="Edit">עריכה</button>
+            <button type="button" class="submit-button" disabled="@_submitting" @onclick="Submit">שליחת בקשה</button>
+        </div>
+    }
+</div>
+
+@code {
+    private bool _submitting;
+
+    [Parameter, EditorRequired]
+    public ChatEntry Entry { get; set; } = default!;
+
+    private bool IsActive =>
+        Entry.ReviewId is { } id
+        && State.Session is { Stage: ConversationStage.Reviewing, ActiveReview: { } active }
+        && active.ReviewId == id;
+
+    private void Submit()
+    {
+        // FR-19: disable on the first click, before anything else runs. The store is idempotent by ReviewId as well.
+        if (_submitting || Entry.ReviewId is not { } id)
+        {
+            return;
+        }
+
+        _submitting = true;
+        State.Submit(id);
+    }
+
+    private void Edit()
+    {
+        if (!_submitting)
+        {
+            State.OpenEdit();
+        }
+    }
+}

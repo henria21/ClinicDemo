@@ -145,7 +145,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - Chat text is rendered as text, not markup.
 
 ### T12 — Review summary + Edit/fallback form UI
-- [ ] **Goal:** The summary bubble with Edit / Submit, active only for `ActiveReview` (I-5), and `PreferenceForm` (category, weekday + week selector, window) used for both Edit and fallback.
+- [x] **Goal:** The summary bubble with Edit / Submit, active only for `ActiveReview` (I-5), and `PreferenceForm` (category, weekday + week selector, window) used for both Edit and fallback.
 - **Files:** `Components/ReviewSummary.razor`, `Components/PreferenceForm.razor`
 - **Depends on:** T11
 - **Done when:** bUnit tests pass:

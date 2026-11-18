@@ -1,0 +1,129 @@
+@* FR-9 / FR-14: the same two fields as a form, used for Edit and for the fallback.
+   Pre-filled from the draft; the week selector defaults to the draft's week hint. *@
+@inject DemoAppState State
+@inject HebrewFormatter Formatter
+@inject HebrewDateResolver Resolver
+
+<form class="preference-form" @onsubmit="Save" @onsubmit:preventDefault>
+    <label>
+        סוג תור
+        <select class="form-category" @bind="_category">
+            @foreach (var category in Enum.GetValues<Category>())
+            {
+                <option value="@category">@Formatter.CategoryLabel(category)</option>
+            }
+        </select>
+    </label>
+
+    <label>
+        יום
+        <select class="form-weekday" @bind="_weekday">
+            @foreach (var day in Enum.GetValues<DayOfWeek>())
+            {
+                <option value="@day">@Formatter.WeekdayName(day)</option>
+            }
+        </select>
+    </label>
+
+    <label>
+        שבוע
+        <select class="form-week" @bind="_week">
+            <option value="@WeekHint.ThisWeek">השבוע</option>
+            <option value="@WeekHint.NextWeek">שבוע הבא</option>
+        </select>
+    </label>
+
+    <label>
+        חלק היום
+        <select class="form-window" @bind="_windowKind">
+            <option value="@WindowKind.Morning">בוקר</option>
+            <option value="@WindowKind.Midday">צהריים</option>
+            <option value="@WindowKind.Afternoon">אחר הצהריים</option>
+            <option value="@WindowKind.After">אחרי שעה מסוימת</option>
+        </select>
+    </label>
+
+    @if (_windowKind == WindowKind.After)
+    {
+        <label>
+            שעה (24 שעות)
+            <input class="form-time" type="text" inputmode="numeric" dir="ltr" placeholder="16:00" @bind="_time" />
+        </label>
+    }
+
+    @if (_error is not null)
+    {
+        <p class="form-error" role="alert">@_error</p>
+    }
+
+    <div class="form-actions">
+        <button type="submit" class="form-save">שמירה</button>
+        <button type="button" class="form-cancel" @onclick="State.CancelEdit">ביטול</button>
+    </div>
+</form>
+
+@code {
+    private Category _category = Category.Checkup;
+    private DayOfWeek _weekday;
+    private WeekHint _week = WeekHint.ThisWeek;
+    private WindowKind _windowKind = WindowKind.Morning;
+    private string _time = string.Empty;
+    private string? _error;
+
+    protected override void OnInitialized()
+    {
+        var simDate = State.Options.SimulationDate;
+        var draft = State.Session?.Draft;
+        _weekday = simDate.DayOfWeek;
+        if (draft is null)
+        {
+            return;
+        }
+
+        _category = draft.Category ?? Category.Checkup;
+        _windowKind = draft.Window?.Kind ?? WindowKind.Morning;
+        _time = draft.Window?.After?.ToString("HH:mm") ?? string.Empty;
+
+        if (draft.DayReference is { } day
+            && Resolver.Resolve(day, draft.WeekHint, simDate) is DateResolution.Resolved resolved)
+        {
+            _weekday = resolved.Date.DayOfWeek;
+            _week = draft.WeekHint != WeekHint.None ? draft.WeekHint : WeekOf(resolved.Date, simDate);
+        }
+        else if (draft.WeekHint != WeekHint.None)
+        {
+            _week = draft.WeekHint;
+        }
+    }
+
+    private static WeekHint WeekOf(DateOnly date, DateOnly simDate)
+    {
+        var nextWeekStart = simDate.AddDays(7 - (int)simDate.DayOfWeek);
+        return date >= nextWeekStart ? WeekHint.NextWeek : WeekHint.ThisWeek;
+    }
+
+    private void Save()
+    {
+        TimeWindow window;
+        if (_windowKind == WindowKind.After)
+        {
+            if (!TimeOnly.TryParseExact(_time.Trim(), new[] { "HH:mm", "H:mm" }, System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out var after))
+            {
+                _error = "יש לכתוב שעה בפורמט 24 שעות, למשל 16:00.";
+                return;
+            }
+
+            window = new TimeWindow(WindowKind.After, after);
+        }
+        else
+        {
+            window = new TimeWindow(_windowKind);
+        }
+
+        var result = State.ApplyForm(_category, _weekday, _week, window);
+        _error = result.IsValid
+            ? null
+            : $"אפשר לבחור יום מהיום ועד סוף השבוע הבא ({Formatter.ShortDate(Resolver.LastDate(State.Options.SimulationDate))}).";
+    }
+}
