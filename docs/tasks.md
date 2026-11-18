@@ -167,7 +167,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
   - **End-to-end:** the Appendix A script driven through the rendered `Home` component produces one matching card.
 
 ### T14 — Brief, README and manual checks
-- [ ] **Goal:** The deliverables and the checks that can't be automated.
+- [x] **Goal:** The deliverables and the checks that can't be automated.
 - **Files:** `README.md` (prerequisites, `dotnet run`, URL, `dotnet test`), `docs/brief.md` (Appendix A conversation as actually produced, 90-second walkthrough, stated limitations: keyword-based medical handling, fictional data only, no availability, local only)
 - **Depends on:** T13
 - **Done when:**
