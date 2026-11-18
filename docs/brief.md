@@ -45,7 +45,7 @@ The card that appears in the inbox:
 | 1:05–1:20 | Click **נבדק** on the card. | *"Staff mark it reviewed. No slot was booked anywhere."* |
 | 1:20–1:30 | Ask the question. | *"How do requests reach your team today, and which information do you need before calling someone back?"* |
 
-Before the next run, click **איפוס הדמו** (or refresh the page): it clears the cards and the chat.
+To show a second request next to the first, click **שיחה חדשה** under the chat after submitting: it starts a new chat and keeps the inbox. Before the next run, click **איפוס הדמו** (or refresh the page): it clears the cards and the chat.
 
 If there's interest, scope a separate pilot around their real process: channels, consent and privacy, data handling, calendar rules, staff ownership. The demo itself only proves that the workflow runs.
 

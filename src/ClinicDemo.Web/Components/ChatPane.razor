@@ -47,6 +47,13 @@
                    placeholder="כתיבת הודעה" disabled="@InputDisabled" @bind="_draft" @bind:event="oninput" />
             <button type="submit" class="send-button" disabled="@InputDisabled">שליחה</button>
         </form>
+
+        @* After a submit: a new chat for another contact, keeping the inbox. The input stays, so
+           "זה נקבע?" still gets the not-a-booking reply. *@
+        @if (State.Session?.Stage == ConversationStage.Submitted)
+        {
+            <button type="button" class="restart-button restart-after-submit" @onclick="State.RestartConversation">שיחה חדשה</button>
+        }
     }
 </section>
 

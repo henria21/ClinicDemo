@@ -156,6 +156,51 @@ public class HomeTests : TestContext
         Assert.Equal("איפוס הדמו", cut.Find(".app-bar button.reset-button").TextContent);
     }
 
+    // ---- New conversation after submit ----
+
+    [Fact]
+    public void NewConversationButton_AppearsOnlyAfterSubmit()
+    {
+        var cut = RenderComponent<Home>();
+        cut.Find("button[data-contact='DEMO-A']").Click();
+        Send(cut, AppendixMessage1);
+        Send(cut, AppendixMessage2);
+        Assert.Empty(cut.FindAll("button.restart-button"));
+
+        cut.Find(".submit-button").Click();
+
+        Assert.Equal("שיחה חדשה", cut.Find("button.restart-after-submit").TextContent);
+        Assert.NotNull(cut.Find("form.chat-input"));
+    }
+
+    [Fact]
+    public void AfterSubmit_TheInputStillAnswersIsItBooked()
+    {
+        var cut = RenderComponent<Home>();
+        RunAppendixA(cut);
+
+        Send(cut, "זה נקבע?");
+
+        Assert.Equal(
+            "התור לא נקבע. נשלחה רק בקשה, והיא ממתינה לבדיקה של צוות הדמו.",
+            cut.FindAll(".chat-pane .bubble-text").Last().TextContent);
+        Assert.NotNull(cut.Find("button.restart-after-submit"));
+    }
+
+    [Fact]
+    public void NewConversationAfterSubmit_KeepsTheInbox_AndReturnsToThePicker()
+    {
+        var cut = RenderComponent<Home>();
+        RunAppendixA(cut);
+
+        cut.Find("button.restart-after-submit").Click();
+
+        Assert.Equal(3, cut.FindAll("button.contact-option").Count);
+        Assert.Empty(cut.FindAll(".chat-pane .bubble"));
+        Assert.Empty(cut.FindAll("button.restart-button"));
+        Assert.Equal("REQ-0001", Assert.Single(cut.FindAll(".request-card")).QuerySelector(".card-id")!.TextContent);
+    }
+
     // ---- FR-1 ----
 
     [Fact]
@@ -175,8 +220,7 @@ public class HomeTests : TestContext
     {
         var cut = RenderComponent<Home>();
         RunAppendixA(cut);
-        // After a submit the chat says to reset; a new conversation keeping the inbox goes through the facade.
-        cut.InvokeAsync(() => Services.GetRequiredService<Core.Session.DemoAppState>().RestartConversation());
+        cut.Find("button.restart-after-submit").Click();
         cut.Find("button[data-contact='DEMO-C']").Click();
         Send(cut, "ייעוץ ביום שני בבוקר");
         cut.Find(".submit-button").Click();

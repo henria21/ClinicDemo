@@ -119,6 +119,7 @@ The design below assumes Blazor WASM. If you prefer React, the Core design carri
                       │    └── 2× not understood ──────► Editing ──save──► Reviewing (fresh ReviewId)
                       │                                       └─cancel─► Reviewing (fresh ReviewId)
    any stage ── medical input ──► Halted ── "שיחה חדשה" (RestartConversation) ──► [contact picker]
+   Submitted ── "שיחה חדשה" (RestartConversation) ──► [contact picker], inbox kept
    any stage ── Reset demo ─────► [contact picker], inbox cleared
 ```
 
