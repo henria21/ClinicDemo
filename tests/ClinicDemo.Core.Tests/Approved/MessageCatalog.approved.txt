@@ -1,0 +1,93 @@
+# MessageCatalog v1: approved assistant text. Henri reviews the Hebrew; any change must be re-approved.
+# Simulation date: 18.11.2026. Sample args: categories=[Checkup, Consultation], days=[Tuesday, Wednesday],
+# windows=[Morning, After 16:00], lastDate=28.11.2026, category=Checkup, time=24.11.2026 After 16:00, contact=DEMO-A.
+
+## Disclaimer
+Asserts: Demo only, no personal data
+Template: זהו דמו בלבד. אין להזין פרטים אישיים או רפואיים.
+Rendered: זהו דמו בלבד. אין להזין פרטים אישיים או רפואיים.
+
+## AskCategory
+Asserts: Question
+Template: איזה סוג תור מבוקש: בדיקה, ביקור מעקב או ייעוץ?
+Rendered: איזה סוג תור מבוקש: בדיקה, ביקור מעקב או ייעוץ?
+
+## AskDay
+Asserts: Question
+Template: באיזה יום מועדף לך להגיע?
+Rendered: באיזה יום מועדף לך להגיע?
+
+## AskWindow
+Asserts: Question
+Template: באיזה חלק של היום מועדף לך: בוקר, צהריים או אחר הצהריים?
+Rendered: באיזה חלק של היום מועדף לך: בוקר, צהריים או אחר הצהריים?
+
+## ClarifyCategory
+Asserts: Question
+Template: הוזכרו כמה סוגי תור: {categories}. איזה מהם מבוקש?
+Rendered: הוזכרו כמה סוגי תור: בדיקה או ייעוץ. איזה מהם מבוקש?
+
+## ClarifyDay
+Asserts: Question
+Template: הוזכרו כמה ימים: {days}. איזה יום מועדף לך?
+Rendered: הוזכרו כמה ימים: יום שלישי או יום רביעי. איזה יום מועדף לך?
+
+## ClarifyWindow
+Asserts: Question
+Template: ההעדפות לשעה לא מתאימות זו לזו: {windows}. מה עדיף לך?
+Rendered: ההעדפות לשעה לא מתאימות זו לזו: בוקר או אחרי 16:00. מה עדיף לך?
+
+## AskTime24h
+Asserts: Question
+Template: כדי לא לטעות בשעה, אפשר לכתוב אותה בפורמט 24 שעות, למשל 16:00?
+Rendered: כדי לא לטעות בשעה, אפשר לכתוב אותה בפורמט 24 שעות, למשל 16:00?
+
+## DayOutOfRange
+Asserts: Range limit, question
+Template: אפשר לבחור יום מהיום ועד סוף השבוע הבא ({lastDate}). איזה יום מועדף לך?
+Rendered: אפשר לבחור יום מהיום ועד סוף השבוע הבא (28.11). איזה יום מועדף לך?
+
+## Summary
+Asserts: Restates the request, asks to send
+Template: לסיכום: בקשה ל{category}, {time}, עבור {contact}. לשלוח את הבקשה לבדיקה של צוות הדמו?
+Rendered: לסיכום: בקשה לבדיקה, ביום שלישי בשבוע הבא אחרי 16:00, עבור איש קשר לדוגמה א׳. לשלוח את הבקשה לבדיקה של צוות הדמו?
+
+## Submitted
+Asserts: Saved; not a booking; nothing sent
+Template: בקשת הדמו נשמרה וממתינה לבדיקת הצוות. זה אינו אישור תור. לא נשלחה הודעה למרפאה אמיתית.
+Rendered: בקשת הדמו נשמרה וממתינה לבדיקת הצוות. זה אינו אישור תור. לא נשלחה הודעה למרפאה אמיתית.
+
+## NotABookingBeforeSubmit
+Asserts: Cannot book
+Template: אני לא יכול לקבוע או לאשר תורים. אפשר לשלוח בקשה, והיא תעבור לבדיקה של צוות הדמו.
+Rendered: אני לא יכול לקבוע או לאשר תורים. אפשר לשלוח בקשה, והיא תעבור לבדיקה של צוות הדמו.
+
+## NotABookingAfterSubmit
+Asserts: Not booked
+Template: התור לא נקבע. נשלחה רק בקשה, והיא ממתינה לבדיקה של צוות הדמו.
+Rendered: התור לא נקבע. נשלחה רק בקשה, והיא ממתינה לבדיקה של צוות הדמו.
+
+## MedicalHandoff
+Asserts: Cannot handle medical
+Template: הדמו הזה לא יכול לטפל בשאלות רפואיות או בפניות דחופות, ואין להשתמש בו כדי לקבל טיפול או ייעוץ.
+Rendered: הדמו הזה לא יכול לטפל בשאלות רפואיות או בפניות דחופות, ואין להשתמש בו כדי לקבל טיפול או ייעוץ.
+
+## OfferForm
+Asserts: Fallback offer
+Template: לא הצלחתי להבין. אפשר למלא את הפרטים בטופס הקצר.
+Rendered: לא הצלחתי להבין. אפשר למלא את הפרטים בטופס הקצר.
+
+## NoChangeDetected
+Asserts: No change; summary follows
+Template: לא זיהיתי שינוי בבקשה. זה הסיכום העדכני:
+Rendered: לא זיהיתי שינוי בבקשה. זה הסיכום העדכני:
+
+## RestartRequired
+Asserts: Conversation stopped; restart needed
+Template: השיחה הזו הופסקה. כדי להמשיך, אפשר להתחיל שיחה חדשה.
+Rendered: השיחה הזו הופסקה. כדי להמשיך, אפשר להתחיל שיחה חדשה.
+
+## AlreadySent
+Asserts: Already sent
+Template: הבקשה כבר נשלחה. כדי להתחיל מחדש, אפשר לאפס את הדמו.
+Rendered: הבקשה כבר נשלחה. כדי להתחיל מחדש, אפשר לאפס את הדמו.
