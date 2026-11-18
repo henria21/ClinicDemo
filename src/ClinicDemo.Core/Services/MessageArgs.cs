@@ -17,6 +17,13 @@ public sealed record MessageArgs
     /// <summary>{days} in ClarifyDay.</summary>
     public IReadOnlyList<DayReference>? Days { get; init; }
 
+    /// <summary>
+    /// Extra {days} options in ClarifyDay when the conflict involves the week: both weeks named
+    /// ("השבוע או בשבוע הבא"), or a relative day that clashes with the week ("מחר או בשבוע הבא").
+    /// Listed after <see cref="Days"/>.
+    /// </summary>
+    public IReadOnlyList<WeekHint>? Weeks { get; init; }
+
     /// <summary>{windows} in ClarifyWindow.</summary>
     public IReadOnlyList<TimeWindow>? Windows { get; init; }
 

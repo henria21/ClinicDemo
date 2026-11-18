@@ -82,6 +82,23 @@ public class MessageCatalogTests
     }
 
     [Fact]
+    public void ClarifyDay_CanListWeekOptions_ForWeekConflicts()
+    {
+        var relativeVsWeek = _catalog.Render(TemplateId.ClarifyDay, new MessageArgs
+        {
+            Days = new[] { DayReference.Of(RelativeDay.Tomorrow) },
+            Weeks = new[] { WeekHint.NextWeek },
+        }).Text;
+        var bothWeeks = _catalog.Render(TemplateId.ClarifyDay, new MessageArgs
+        {
+            Weeks = new[] { WeekHint.ThisWeek, WeekHint.NextWeek },
+        }).Text;
+
+        Assert.Equal("הוזכרו כמה ימים: מחר או בשבוע הבא. איזה יום מועדף לך?", relativeVsWeek);
+        Assert.Equal("הוזכרו כמה ימים: השבוע או בשבוע הבא. איזה יום מועדף לך?", bothWeeks);
+    }
+
+    [Fact]
     public void Summary_ReproducesAppendixA()
     {
         var text = _catalog.Render(TemplateId.Summary, SampleArgs).Text;

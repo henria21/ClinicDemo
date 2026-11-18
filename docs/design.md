@@ -152,7 +152,10 @@ These are enforced in `ConversationEngine` and tested directly:
    - **Single values** overwrite the draft field (FR-9: "בעצם עדיף רביעי").
    - **Re-resolve the day** from `DayReference` + `WeekHint` on every change, including a change to the hint alone ("בעצם בשבוע הזה").
      - `OutOfRange` → day set to null → `DayOutOfRange`
-     - `Conflict` → day set to null → `ClarifyDay`
+     - `Conflict` → day set to null → `ClarifyDay`, listing the day and the week ("מחר או בשבוע הבא")
+     - In both cases the stored `WeekHint` is also reset to `None`, so the visitor's next answer isn't resolved against the same hint again.
+     - `ClarifyDay`'s `{days}` can list week options after the days (`MessageArgs.Weeks`), for a week conflict or a day/week conflict. The template text is unchanged.
+   - **One question per reply**, in field order Category → Day → Window: the first conflict or problem, otherwise the first missing field. An ambiguous time is never combined with a day part ("בבוקר אחרי 4" → `AskTime24h`). One day part plus a compatible `After` time ("אחר הצהריים אחרי 16:00") keeps the time.
    - **No change understood**: if every field is already resolved (the visitor was reviewing) → `NoChangeDetected` + a fresh `Summary` with a new ReviewId. Otherwise, increment the missing field's counter; at 2 → `OfferForm`, stage `Editing` (FR-14).
    - **Next unresolved field**, in order Category → Day → Window → its question (`AskCategory` / `AskDay` / `AskWindow`).
    - **All fields resolved and valid** → a new `ReviewSnapshot` (new ReviewId) → `ActiveReview`, stage `Reviewing`, `Summary`.

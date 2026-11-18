@@ -65,6 +65,14 @@ public sealed class HebrewFormatter
         };
     }
 
+    /// <summary>A week option as a ClarifyDay label: "השבוע", "בשבוע הבא".</summary>
+    public string WeekHintLabel(WeekHint hint) => hint switch
+    {
+        WeekHint.ThisWeek => "השבוע",
+        WeekHint.NextWeek => "בשבוע הבא",
+        _ => throw new ArgumentOutOfRangeException(nameof(hint), hint, "Only ThisWeek and NextWeek have a label."),
+    };
+
     /// <summary>Window as a stand-alone label: "בוקר", "צהריים", "אחר הצהריים", "אחרי 16:00".</summary>
     public string WindowLabel(TimeWindow window)
     {

@@ -99,8 +99,7 @@ public sealed class MessageCatalog
 
         text = Fill(text, "{categories}", () =>
             _formatter.OrList(Required(args.Categories, nameof(args.Categories)).Select(_formatter.CategoryLabel)));
-        text = Fill(text, "{days}", () =>
-            _formatter.OrList(Required(args.Days, nameof(args.Days)).Select(_formatter.DayReferenceLabel)));
+        text = Fill(text, "{days}", () => _formatter.OrList(DayOptions(args)));
         text = Fill(text, "{windows}", () =>
             _formatter.OrList(Required(args.Windows, nameof(args.Windows)).Select(_formatter.WindowLabel)));
         text = Fill(text, "{lastDate}", () =>
@@ -113,6 +112,17 @@ public sealed class MessageCatalog
             Required(args.Contact, nameof(args.Contact)).DisplayName);
 
         return new AssistantMessage(id, text);
+    }
+
+    private IEnumerable<string> DayOptions(MessageArgs args)
+    {
+        if (args.Days is null && args.Weeks is null)
+        {
+            throw new ArgumentException("Missing message argument: Days.", nameof(args.Days));
+        }
+
+        return (args.Days ?? Array.Empty<DayReference>()).Select(_formatter.DayReferenceLabel)
+            .Concat((args.Weeks ?? Array.Empty<WeekHint>()).Select(_formatter.WeekHintLabel));
     }
 
     private static string Fill(string text, string placeholder, Func<string> value) =>

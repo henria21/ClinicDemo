@@ -97,7 +97,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
 - **Notes:** a single `lock` covers check-then-insert plus ID generation (design §8).
 
 ### T8 — ConversationEngine: collecting → review
-- [ ] **Goal:** The happy path plus collection logic: disclaimer prefix, per-field questions, conflicts (category, day, window), week-hint persistence, day re-resolution, ambiguous time, the 2× not-understood → form offer, and building the `ReviewSnapshot`.
+- [x] **Goal:** The happy path plus collection logic: disclaimer prefix, per-field questions, conflicts (category, day, window), week-hint persistence, day re-resolution, ambiguous time, the 2× not-understood → form offer, and building the `ReviewSnapshot`.
 - **Files:** `Session/ConversationSession.cs`, `Services/ConversationEngine.cs`
 - **Depends on:** T2, T4, T5, T6
 - **Done when:**
