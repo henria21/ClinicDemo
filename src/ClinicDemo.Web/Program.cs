@@ -6,6 +6,6 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Services are registered in T10.
+builder.Services.AddClinicDemo();
 
 await builder.Build().RunAsync();

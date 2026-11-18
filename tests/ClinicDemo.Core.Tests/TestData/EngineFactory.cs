@@ -30,4 +30,10 @@ public static class EngineFactory
     }
 
     public static ConversationSession CreateSession(int contactIndex = 0) => new(DemoContacts.All[contactIndex]);
+
+    public static DemoAppState CreateAppState()
+    {
+        var engine = CreateEngine(out var store);
+        return new DemoAppState(engine, store, DemoOptions.Default);
+    }
 }

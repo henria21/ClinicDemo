@@ -91,7 +91,9 @@ The design below assumes Blazor WASM. If you prefer React, the Core design carri
 |---|---|---|
 | `ConversationSession` (`Core/Session`) | One per chat | Holds the `DemoContact`, `Stage`, `RequestDraft`, `Messages`, **`ActiveReview` (`ReviewSnapshot?`)**, the set of submitted ReviewIds, the `DisclaimerShown` flag, and a not-understood counter per field. `InvalidateReview()` sets `ActiveReview = null` and is the only way to clear it. |
 | `RequestStore` (`Core/Repositories`) | Singleton | Concrete, in-memory class with `Submit(ReviewSnapshot)`, `SetStatus(id, status)`, `GetAll()`, `Clear()`, and an `event Action Changed`. Idempotent: it keeps a `Dictionary<Guid, AppointmentRequest>` keyed by ReviewId. A lock guards the sequence counter (see §8). |
-| `DemoAppState` (`Core/Session`) | Singleton | The facade the UI talks to. Owns the current session and the store. `SelectContact`, `Send`, `OpenEdit`, `ApplyForm`, `CancelEdit`, `Submit`, `RestartConversation` (new chat, inbox kept), `SetStatus`, `Reset` (everything). Raises `Changed`. |
+| `DemoAppState` (`Core/Session`) | Singleton | The facade the UI talks to. Owns the current session and the store. `SelectContact`, `Send`, `OpenEdit`, `ApplyForm`, `CancelEdit`, `Submit`, `RestartConversation` (new chat, inbox kept), `SetStatus`, `Reset` (everything). Raises `Changed` after every action. Also keeps the chat **`Transcript`** (`ChatEntry` list: visitor and assistant bubbles; a Summary bubble carries its ReviewId so the UI can apply I-5), cleared on restart, reset and a new contact. In memory only. |
+
+**DI.** `ClinicDemo.Web/ClinicDemoServices.AddClinicDemo()` registers every service, the store and `DemoAppState` as singletons (one per browser tab in WASM; a refresh resets). No `HttpClient` is registered.
 
 ### Exceptions (`Core/Exceptions`)
 

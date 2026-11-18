@@ -124,7 +124,7 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
 - **Notes:** the biggest task. If it runs long, split it into T9a (invalidation + submit outcomes) and T9b (edit + handoff).
 
 ### T10 — DemoAppState facade + DI wiring
-- [ ] **Goal:** One facade for the UI: `SelectContact`, `Send`, `OpenEdit`, `ApplyForm`, `CancelEdit`, `Submit`, `RestartConversation`, `SetStatus`, `Reset`. It raises `Changed`. Services are registered in `Program.cs`.
+- [x] **Goal:** One facade for the UI: `SelectContact`, `Send`, `OpenEdit`, `ApplyForm`, `CancelEdit`, `Submit`, `RestartConversation`, `SetStatus`, `Reset`. It raises `Changed`. Services are registered in `Program.cs`.
 - **Files:** `Session/DemoAppState.cs`, `Web/Program.cs`
 - **Depends on:** T7, T9
 - **Done when:** `DemoAppStateTests` pass:
