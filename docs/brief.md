@@ -57,4 +57,4 @@ Say these out loud when they're relevant; they are also why the demo is safe to 
 - **Fictional data only.** Three fixed demo contacts (DEMO-A/B/C); there are no name, phone or email fields. Don't type real personal or medical details.
 - **No availability and no booking.** The demo never checks a calendar, has no clinic hours, and never confirms a slot. A card is a request waiting for staff, nothing more.
 - **Rule-based Hebrew, 24-hour times.** The assistant understands the scripted phrasings and common variants. Times must be 24-hour: "אחרי 4" gets a follow-up question and is never read as 16:00. Anything it can't read twice in a row opens a short form instead.
-- **Local only.** No backend, no AI, no analytics, no external calls; chat text is kept in browser memory and never logged. Present it from your own machine. If it ever has to be shared, use access-controlled hosting — an unlisted URL is not private.
+- **Browser only.** No backend, no AI, no analytics, no external calls; chat text is kept in browser memory and never logged. It can run locally or from the public static demo link; either way nothing a visitor types leaves their browser.

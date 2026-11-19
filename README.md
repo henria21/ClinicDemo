@@ -58,4 +58,4 @@ docs/                    requirements, design, tasks, brief
 
 ## Privacy
 
-The demo stays local while it's being built and shown (`dotnet run`, presented from your laptop). If it ever has to be shared, use **access-controlled hosting** (for example Azure Static Web Apps with authentication, or Cloudflare Access in front). An unlisted URL is not private.
+The demo may be hosted publicly as static files (it is on Vercel, linked as "live demo, fictional clinic"). It has no backend: whatever a visitor types stays in their browser memory, is never sent or logged, and is gone on refresh. Keep the demo banner visible. Before adding a backend or the AI step, revisit this, because visitor text would then leave the browser.

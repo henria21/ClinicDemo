@@ -213,4 +213,3 @@ Each task ends with green tests before the next one starts. Checkboxes get ticke
 - Quick-reply chips under questions (category, day part).
 - English UI toggle for non-Hebrew audiences.
 - v2: ASP.NET Core API reusing Core, AI extraction returning `ExtractionResult` JSON only, server Reset endpoint.
-- Access-controlled hosting if the demo has to be shared (design §10).

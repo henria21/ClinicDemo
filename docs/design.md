@@ -321,4 +321,4 @@ The Blazor template's Bootstrap, sample pages and any CDN links are removed, so 
 - **v2 AI extraction:** an ASP.NET Core API reusing `ClinicDemo.Core`. The AI returns `ExtractionResult`-shaped JSON only, validated by `RequestValidator`; failures fall back to the form; plus a server Reset endpoint.
 - Quick-reply chips under questions (category, day part) to speed up the walkthrough.
 - An English toggle for non-Hebrew audiences in sales meetings.
-- Hosting: **keep the demo local while building** (`dotnet run`, presented from the laptop). If it has to be shared, use **access-controlled** hosting (e.g. Azure Static Web Apps with authentication, or Cloudflare Access in front). An unlisted URL is not private.
+- Hosting: `dotnet run` locally, or **public static hosting** (Vercel: `dotnet publish -c Release`, deploy `wwwroot` with an SPA rewrite to `index.html`). Public is acceptable because v1 has no backend and no external calls, so visitor text never leaves the browser. Revisit before adding a backend or AI (v2).

@@ -23,4 +23,4 @@ A Hebrew (RTL) clinic **appointment-request** sales demo: one page with a chat p
 - **The week hint persists:** "שבוע הבא" + "חמישי" → 26.11 (simulation date Wed 18.11.2026).
 - **No external calls:** no CDN, fonts, analytics or AI in v1, and chat text never goes to logs. No backend in v1.
 - The medical keyword list only demonstrates a few synthetic examples. Say so; never claim it detects medical input reliably.
-- Keep the demo local. If it's ever shared, use access-controlled hosting, not an unlisted URL.
+- Public hosting is allowed (static files only, no backend; Vercel project `clinic-demo`). Keep the demo banner visible, never add analytics or external calls, and recheck this rule before adding any backend or AI step.
