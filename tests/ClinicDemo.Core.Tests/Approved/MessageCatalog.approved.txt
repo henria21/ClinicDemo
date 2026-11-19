@@ -1,6 +1,7 @@
 # MessageCatalog v1: approved assistant text. Henri reviews the Hebrew; any change must be re-approved.
 # Simulation date: 18.11.2026. Sample args: categories=[Checkup, Consultation], days=[Tuesday, Wednesday],
-# windows=[Morning, After 16:00], lastDate=28.11.2026, category=Checkup, time=24.11.2026 After 16:00, contact=DEMO-A.
+# windows=[Morning, After 16:00], lastDate=28.11.2026, category=Checkup, time=24.11.2026 After 16:00, contact=DEMO-A,
+# exactTime=20:00.
 
 ## Disclaimer
 Asserts: Demo only, no personal data
@@ -41,6 +42,11 @@ Rendered: ההעדפות לשעה לא מתאימות זו לזו: בוקר או
 Asserts: Question
 Template: כדי לא לטעות בשעה, אפשר לכתוב אותה בפורמט 24 שעות, למשל 16:00?
 Rendered: כדי לא לטעות בשעה, אפשר לכתוב אותה בפורמט 24 שעות, למשל 16:00?
+
+## ExactTimeNotSupported
+Asserts: Question; exact time not requestable
+Template: אין אפשרות לבקש שעה מדויקת בדמו. אפשר לבקש "אחרי {exactTime}", או לבחור בוקר, צהריים או אחר הצהריים. מה מתאים לך?
+Rendered: אין אפשרות לבקש שעה מדויקת בדמו. אפשר לבקש "אחרי 20:00", או לבחור בוקר, צהריים או אחר הצהריים. מה מתאים לך?
 
 ## DayOutOfRange
 Asserts: Range limit, question

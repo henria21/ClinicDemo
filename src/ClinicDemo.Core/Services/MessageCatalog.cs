@@ -35,6 +35,9 @@ public sealed class MessageCatalog
         new MessageTemplate(TemplateId.AskTime24h,
             "כדי לא לטעות בשעה, אפשר לכתוב אותה בפורמט 24 שעות, למשל 16:00?",
             "Question"),
+        new MessageTemplate(TemplateId.ExactTimeNotSupported,
+            "אין אפשרות לבקש שעה מדויקת בדמו. אפשר לבקש \"אחרי {exactTime}\", או לבחור בוקר, צהריים או אחר הצהריים. מה מתאים לך?",
+            "Question; exact time not requestable"),
         new MessageTemplate(TemplateId.DayOutOfRange,
             "אפשר לבחור יום מהיום ועד סוף השבוע הבא ({lastDate}). איזה יום מועדף לך?",
             "Range limit, question"),
@@ -102,6 +105,8 @@ public sealed class MessageCatalog
         text = Fill(text, "{days}", () => _formatter.OrList(DayOptions(args)));
         text = Fill(text, "{windows}", () =>
             _formatter.OrList(Required(args.Windows, nameof(args.Windows)).Select(_formatter.WindowLabel)));
+        text = Fill(text, "{exactTime}", () =>
+            RequiredValue(args.ExactTime, nameof(args.ExactTime)).ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture));
         text = Fill(text, "{lastDate}", () =>
             _formatter.ShortDate(RequiredValue(args.LastDate, nameof(args.LastDate))));
         text = Fill(text, "{category}", () =>

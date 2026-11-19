@@ -59,6 +59,39 @@ public class HebrewPreferenceExtractorTests
         Assert.False(r.AmbiguousTime);
     }
 
+    // ---- Exact times: flagged, never a window ----
+
+    [Theory]
+    [InlineData("ב-20:00", 20, 0)]
+    [InlineData("בשעה 20:00", 20, 0)]
+    [InlineData("ב20:00", 20, 0)]
+    [InlineData("16:00", 16, 0)]
+    [InlineData("ל-9:30", 9, 30)]
+    public void ExactTime_IsFlagged_AndYieldsNoWindow(string text, int hour, int minute)
+    {
+        var r = _extractor.Extract(text);
+
+        Assert.Equal(new TimeOnly(hour, minute), r.ExactTime);
+        Assert.Empty(r.Windows);
+        Assert.False(r.AmbiguousTime);
+    }
+
+    [Theory]
+    [InlineData("אחרי 16:00")]
+    [InlineData("לאחר 16:00")]
+    [InlineData("ב-16")]
+    [InlineData("ב-25:00")]
+    public void NotAnExactTime(string text)
+    {
+        Assert.Null(_extractor.Extract(text).ExactTime);
+    }
+
+    [Fact]
+    public void ExactTime_FirstOneWins()
+    {
+        Assert.Equal(new TimeOnly(18, 0), _extractor.Extract("ב-18:00 או ב-20:00").ExactTime);
+    }
+
     [Theory]
     [InlineData("אחרי 4")]
     [InlineData("אחרי 12")]

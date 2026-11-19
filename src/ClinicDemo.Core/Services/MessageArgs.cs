@@ -27,6 +27,9 @@ public sealed record MessageArgs
     /// <summary>{windows} in ClarifyWindow.</summary>
     public IReadOnlyList<TimeWindow>? Windows { get; init; }
 
+    /// <summary>{exactTime} in ExactTimeNotSupported: the visitor's own 24-hour time, rendered as HH:mm.</summary>
+    public TimeOnly? ExactTime { get; init; }
+
     /// <summary>{lastDate} in DayOutOfRange: the last selectable day.</summary>
     public DateOnly? LastDate { get; init; }
 

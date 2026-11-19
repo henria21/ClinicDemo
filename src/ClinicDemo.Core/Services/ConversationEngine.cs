@@ -202,7 +202,8 @@ public sealed class ConversationEngine
 
         var result = _extractor.Extract(text);
         var understood = result.Categories.Count > 0 || result.Days.Count > 0 || result.Windows.Count > 0
-            || result.WeekHint != WeekHint.None || result.WeekHintConflict || result.AmbiguousTime;
+            || result.WeekHint != WeekHint.None || result.WeekHintConflict || result.AmbiguousTime
+            || result.ExactTime is not null;
 
         if (!understood)
         {
@@ -313,6 +314,13 @@ public sealed class ConversationEngine
         {
             draft.Window = null;
             return _catalog.Render(TemplateId.AskTime24h);
+        }
+
+        // An exact time can't be requested; it is never dropped silently or turned into "after" ("ב-20:00").
+        if (result.ExactTime is { } exact)
+        {
+            draft.Window = null;
+            return _catalog.Render(TemplateId.ExactTimeNotSupported, new MessageArgs { ExactTime = exact });
         }
 
         if (window is not null)

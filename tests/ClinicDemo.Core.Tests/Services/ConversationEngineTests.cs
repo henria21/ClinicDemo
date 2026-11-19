@@ -164,6 +164,50 @@ public class ConversationEngineTests
         Assert.Null(_session.ActiveReview);
     }
 
+    // ---- Exact time: asked about, never dropped or turned into "after" ----
+
+    [Theory]
+    [InlineData("בדיקה ביום ראשון הבא ב-20:00")]
+    [InlineData("בדיקה ביום ראשון הבא בשעה 20:00")]
+    [InlineData("בדיקה ביום ראשון הבא בערב ב-20:00")]
+    public void ExactTime_AsksAndOffersAfter(string text)
+    {
+        var replies = _engine.Handle(_session, text);
+
+        Assert.Equal(TemplateId.ExactTimeNotSupported, replies.Last().Id);
+        Assert.Contains("\"אחרי 20:00\"", replies.Last().Text);
+        Assert.Null(_session.Draft.Window);
+        Assert.Null(_session.ActiveReview);
+        Assert.Equal(DayReference.Of(DayOfWeek.Sunday), _session.Draft.DayReference); // the day is kept: 22.11
+    }
+
+    [Fact]
+    public void BareTime_AfterAskWindow_GetsTheExactTimeQuestion_ThenAfterTimeCompletes()
+    {
+        _engine.Handle(_session, "בדיקה ביום שלישי");
+
+        var exact = _engine.Handle(_session, "16:00");
+        Assert.Equal(new[] { TemplateId.ExactTimeNotSupported }, Ids(exact));
+
+        var after = _engine.Handle(_session, "אחרי 16:00");
+        Assert.Equal(new[] { TemplateId.Summary }, Ids(after));
+        Assert.Equal(new TimeWindow(WindowKind.After, new TimeOnly(16, 0)), _session.ActiveReview!.TimePreference.Window);
+    }
+
+    [Fact]
+    public void ExactTime_DuringReview_InvalidatesTheReview()
+    {
+        _engine.Handle(_session, "בדיקה ביום שלישי אחרי 16:00");
+        var old = _session.ActiveReview!.ReviewId;
+
+        var replies = _engine.Handle(_session, "בעצם ב-20:00");
+
+        Assert.Equal(new[] { TemplateId.ExactTimeNotSupported }, Ids(replies));
+        Assert.Null(_session.ActiveReview);
+        Assert.Null(_session.Draft.Window);
+        Assert.Equal(SubmitOutcome.Rejected, _engine.Submit(_session, old).Outcome);
+    }
+
     // ---- Day range ----
 
     [Fact]

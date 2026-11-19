@@ -11,6 +11,7 @@ public enum TemplateId
     ClarifyDay,
     ClarifyWindow,
     AskTime24h,
+    ExactTimeNotSupported,
     DayOutOfRange,
     Summary,
     Submitted,

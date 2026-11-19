@@ -16,6 +16,7 @@ public class MessageCatalogTests
         Categories = new[] { Category.Checkup, Category.Consultation },
         Days = new[] { DayReference.Of(DayOfWeek.Tuesday), DayReference.Of(DayOfWeek.Wednesday) },
         Windows = new[] { new TimeWindow(WindowKind.Morning), new TimeWindow(WindowKind.After, new TimeOnly(16, 0)) },
+        ExactTime = new TimeOnly(20, 0),
         LastDate = new DateOnly(2026, 11, 28),
         Category = Category.Checkup,
         Time = new TimePreference(new DateOnly(2026, 11, 24), new TimeWindow(WindowKind.After, new TimeOnly(16, 0))),
@@ -130,7 +131,8 @@ public class MessageCatalogTests
         var sb = new StringBuilder();
         sb.Append("# MessageCatalog v1: approved assistant text. Henri reviews the Hebrew; any change must be re-approved.\n");
         sb.Append("# Simulation date: 18.11.2026. Sample args: categories=[Checkup, Consultation], days=[Tuesday, Wednesday],\n");
-        sb.Append("# windows=[Morning, After 16:00], lastDate=28.11.2026, category=Checkup, time=24.11.2026 After 16:00, contact=DEMO-A.\n");
+        sb.Append("# windows=[Morning, After 16:00], lastDate=28.11.2026, category=Checkup, time=24.11.2026 After 16:00, contact=DEMO-A,\n");
+        sb.Append("# exactTime=20:00.\n");
         foreach (var template in _catalog.Templates)
         {
             sb.Append('\n');

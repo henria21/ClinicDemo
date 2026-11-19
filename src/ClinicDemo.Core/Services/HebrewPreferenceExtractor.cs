@@ -22,6 +22,9 @@ namespace ClinicDemo.Core.Services;
 /// <item>Times, 24-hour only, after "אחרי" or "לאחר": HH:MM (00–23, 00–59) or a bare hour 13–23 → After(time).
 /// A bare 0–12, a number word or anything else (including nothing) after the marker sets
 /// <see cref="ExtractionResult.AmbiguousTime"/> and yields no window. Nothing is ever read as PM.</item>
+/// <item>Exact times: any other 24-hour HH:MM token, alone or with a one-letter ב / ל prefix ("16:00", "ב-20:00", "בשעה 20:00",
+/// "ב20:00"), sets <see cref="ExtractionResult.ExactTime"/> (first one wins) and yields no window. A bare hour without
+/// minutes is not read as a time.</item>
 /// </list>
 /// <para><see cref="ExtractionResult.UnknownDayName"/> is set conservatively: only for "יום" followed by a single Hebrew
 /// letter with a geresh that is not a day letter (e.g. "יום ז׳"). The value is the normalised token; the first one wins.</para>
@@ -135,6 +138,7 @@ public sealed class HebrewPreferenceExtractor
         bool nextWeek = false;
         bool ambiguousTime = false;
         string? unknownDayName = null;
+        TimeOnly? exactTime = null;
 
         for (int i = 0; i < tokens.Count; i++)
         {
@@ -217,6 +221,10 @@ public sealed class HebrewPreferenceExtractor
             {
                 AddDistinct(categories, seen, category.Value);
             }
+            else if (exactTime is null && TryParseExactTime(token, out var exact))
+            {
+                exactTime = exact;
+            }
         }
 
         var weekHint = (thisWeek, nextWeek) switch
@@ -227,7 +235,8 @@ public sealed class HebrewPreferenceExtractor
         };
 
         return new ExtractionResult(
-            categories, days, windows, weekHint, ambiguousTime, unknownDayName, WeekHintConflict: thisWeek && nextWeek);
+            categories, days, windows, weekHint, ambiguousTime, unknownDayName, WeekHintConflict: thisWeek && nextWeek,
+            ExactTime: exactTime);
     }
 
     /// <summary>Adds <paramref name="value"/> unless it was seen before, keeping first-seen order. O(1).</summary>
@@ -238,6 +247,14 @@ public sealed class HebrewPreferenceExtractor
         {
             list.Add(value);
         }
+    }
+
+    /// <summary>"HH:MM" (24-hour, minutes required), optionally after one ב or ל prefix letter ("ב20:00").</summary>
+    private static bool TryParseExactTime(string token, out TimeOnly time)
+    {
+        time = default;
+        string digits = token.Length > 1 && token[0] is 'ב' or 'ל' ? token.Substring(1) : token;
+        return digits.Length > 0 && StartsWithDigit(digits) && digits.Contains(':') && TryParse24h(digits, out time);
     }
 
     private static bool StartsWithDigit(string token) => char.IsAsciiDigit(token[0]);
